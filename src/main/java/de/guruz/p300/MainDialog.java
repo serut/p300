@@ -436,56 +436,7 @@ public class MainDialog extends Object implements ActionListener,
 		System.exit(0);
 	}
 
-	/**
-	 * Hide the splash screen after one second
-	 * 
-	 * @author guruz
-	 * @see #guruzsplashManager
-	 * @see #initSplashScreen()
-	 */
-	private static void hideSplashScreen() {
-		if (MainDialog.guruzsplashManager != null) {
-			try {
-				Thread.sleep(1000);
-				MainDialog.guruzsplashManager.hide();
-			} catch (Throwable t) {
-				// e.printStackTrace();
-				D.out("Splashscreen: " + t.toString());
-			}
 
-		}
-	}
-
-	/**
-	 * Initialize and show the splash screen
-	 * 
-	 * @return True: Splash is visible; False: Splash not visible (might be no
-	 *         GUI)
-	 * @author guruz
-	 * @see #guruzsplashManager
-	 * @see #hideSplashScreen()
-	 */
-	private static boolean initSplashScreen() {
-		try {
-			String className = "de.guruz.guruzsplash.implementation.GuruzsplashManagerImplementation";
-			Class<?> c = Class.forName(className);
-			Object o = c.newInstance();
-			MainDialog.guruzsplashManager = (GuruzsplashManager) o;
-
-			if (MainDialog.guruzsplashManager.isVisible()) {
-				return true;
-			} else {
-				MainDialog.guruzsplashManager = null;
-				return false;
-			}
-
-		} catch (Throwable t) {
-			D
-					.out("No splash screen supported on this platform or java version");
-			MainDialog.guruzsplashManager = null;
-			return false;
-		}
-	}
 
 	/**
 	 * Check if this is running in console
@@ -536,8 +487,9 @@ public class MainDialog extends Object implements ActionListener,
 		}
 
 		// see if we have java 1.6 and a splash screen
-		MainDialog.initSplashScreen();
-
+		//MainDialog.initSplashScreen();
+        MainInterface.getInstance().initSplashScreen();
+        
 		try {
 			launchedByRevision = System.getProperty("launchedByP300Revision");
 		} catch (Exception e) {
@@ -607,7 +559,7 @@ public class MainDialog extends Object implements ActionListener,
 		// de the splash, no matter if it exists or is visible
 		Runnable r = new Runnable() {
 			public void run() {
-				MainDialog.hideSplashScreen();
+				MainInterface.getInstance().hideSplashScreen();
 			}
 		};
 		new Thread(r).start();
@@ -617,7 +569,7 @@ public class MainDialog extends Object implements ActionListener,
 		if (!MainDialog.isHeadless() && MainDialog.instance != null) {
 			MainDialog.instance.setGUIEnabled(true);
 
-			if ((MainDialog.instance.guruztrayManager != null)
+			if ((MainInterface.getInstance().guruztrayManager != null)
 					&& !Configuration.instance().isFirstStart()) {
 				// if we have a tray icon and this is NOT the first start then
 				// hide oursevles
@@ -689,8 +641,8 @@ public class MainDialog extends Object implements ActionListener,
 		}
 		
 
-		if (MainDialog.instance.guruztrayManager != null
-				&& MainDialog.instance.guruztrayManager.isSupported()) {
+		if (MainInterface.getInstance().guruztrayManager != null
+				&& MainInterface.getInstance().guruztrayManager.isSupported()) {
 			msg = msg
 					+ "\n\nIf you close the main window, it will be minimized in the system tray. On your next start\n"
 					+ "of p300 it will automatically be started in the system tray.";
@@ -789,14 +741,6 @@ public class MainDialog extends Object implements ActionListener,
 	 */
 	java.awt.Window realWindow = null;
 
-	/**
-	 * 
-	 * 
-	 * @author guruz
-	 * @see de.guruz.guruztray.interfaces.GuruztrayManager
-	 * @see #createTrayIcon()
-	 */
-	GuruztrayManager guruztrayManager = null;
 
 	/**
 	 * This call changes the content of the info panel at the right
@@ -948,7 +892,7 @@ public class MainDialog extends Object implements ActionListener,
 
 			// tell the tray which window to
 			// show/hide
-			this.guruztrayManager.setAssociatedWindow(this.realWindow);
+			MainInterface.getInstance().guruztrayManager.setAssociatedWindow(this.realWindow);
 		} else {
 			this.realWindow = new JFrame(windowTitle);
 			this.realWindow.setLayout(new BorderLayout());
@@ -1173,12 +1117,12 @@ public class MainDialog extends Object implements ActionListener,
 			String className = "de.guruz.guruztray.implementation.GuruztrayManagerImplementation";
 			Class<?> c = Class.forName(className);
 			Object o = c.newInstance();
-			this.guruztrayManager = (GuruztrayManager) o;
+			MainInterface.getInstance().guruztrayManager = (GuruztrayManager) o;
 
 			// System.out.println ("Tray supported = " +
 			// guruztrayManager.isSupported());
 
-			if (!this.guruztrayManager.isSupported()) {
+			if (!MainInterface.getInstance().guruztrayManager.isSupported()) {
 				throw new Exception("Tray not supported");
 			}
 
@@ -1251,7 +1195,7 @@ public class MainDialog extends Object implements ActionListener,
 			mi.setEnabled(true);
 			pm.add(mi);
 
-			this.guruztrayManager.setTrayIcon(im_16x16, im_22x22, "p300", pm);
+			MainInterface.getInstance().guruztrayManager.setTrayIcon(im_16x16, im_22x22, "p300", pm);
 
 		} catch (Throwable t) {
 			D
