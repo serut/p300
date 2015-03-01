@@ -72,13 +72,13 @@ public class IconChooser {
 	private static String[] imgTagSrc = {"<img src='",  "' class='icon'>"};
 	
 	// Icons for various file formats
-	private static String parentIconHtmlTag  = IconChooser.iconImgTag ("/back.gif");
-	private static String folderIconHtmlTag  = IconChooser.iconImgTag ("/folder.gif");
-	private static String imgIconHtmlTag     = IconChooser.iconImgTag ("/image2.gif");
-	private static String audioIconHtmlTag   = IconChooser.iconImgTag ("/sound2.gif");
-	private static String compIconHtmlTag    = IconChooser.iconImgTag ("/compressed.gif");
-	private static String movIconHtmlTag     = IconChooser.iconImgTag ("/movie.gif");
-	private static String genericIconHtmlTag = IconChooser.iconImgTag ("/generic.gif");
+	private static String parentIconHtmlTag  = IconChooser.iconImgTag ("/apaxy_theme/folderhome.png");
+	private static String folderIconHtmlTag  = IconChooser.iconImgTag ("/apaxy_theme/folder.png");
+	private static String imgIconHtmlTag     = IconChooser.iconImgTag ("/apaxy_theme/image.png");
+	private static String audioIconHtmlTag   = IconChooser.iconImgTag ("/apaxy_theme/audio.png");
+	private static String compIconHtmlTag    = IconChooser.iconImgTag ("/apaxy_theme/zip.png");
+	private static String movIconHtmlTag     = IconChooser.iconImgTag ("/apaxy_theme/video.png");
+	private static String genericIconHtmlTag = IconChooser.iconImgTag ("/apaxy_theme/default.png");
 	
 	
 	private static ImageIcon folderImageIcon = IconChooser.iconImageFromResource ("22x22/folder.png");

@@ -72,6 +72,8 @@ import de.guruz.p300.utils.IconChooser;
 import de.guruz.p300.utils.MinMax;
 import de.guruz.p300.utils.URL;
 import de.guruz.p300.utils.XML;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * A file upload request
@@ -376,10 +378,14 @@ public class FileRequest extends Request {
 
 		this.requestThread.write(layouter.getBeforeMainDiv());
 
-		this.requestThread.write("<pre>");
+		this.requestThread.write("<table>"
+                        + "<tr><th></tg>"
+                        + "<th class=\"filename\"><strong>Name</strong></th>"
+                        + "<th class=\"lastModified\"><strong>Last modified</strong></th>"
+                        + "<th class=\"size\"><strong>Size</strong></th></tr>\n\n");
 
-		this.requestThread.write(IconChooser.fileNameToHTMLImageTag("../"));
-		this.requestThread.write("<a href=\"../\">../</a>\n");
+		this.requestThread.write("<tr class=\"parent\"><td>" + IconChooser.fileNameToHTMLImageTag("../") + "</td>"
+                        + "<td><a href=\"../\">Parent Directory/</a></td></tr>\n");
 
 		int fileCount = 0;
 		fileCount = fileCount
@@ -387,10 +393,10 @@ public class FileRequest extends Request {
 		fileCount = fileCount
 				+ this.printDirlisting(sharedEntity.getFileSubEntities());
 
-		this.requestThread.write("\n<br>\n");
+		this.requestThread.write("\n\n");
 
 		String fileCountHTML = FileRequest.getFileCountHTML(fileCount);
-		this.requestThread.write("<p>" + fileCountHTML + "</p></pre>");
+		this.requestThread.write("<tr><td></td><td>" + fileCountHTML + "<tr></table>");
 
 		this.requestThread.write(layouter.getAfterMainDiv());
 
@@ -419,20 +425,27 @@ public class FileRequest extends Request {
 				fileFullName = fileFullName + '/';
 				fileShortName = fileShortName + '/';
 			}
+                        
+                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        String lastModifiedAsString = df.format(sharedEntity.getLastModified());
 
-			this.requestThread.write(IconChooser
-					.fileNameToHTMLImageTag(fileShortName));
-			this.requestThread.write("<a ");
-
+			this.requestThread.write("<tr><td>"
+                                        +IconChooser.fileNameToHTMLImageTag(fileShortName)
+                                        + "</td>");
+                        
+			this.requestThread.write("<td><a href=\"" + fileFullName + "\">"
+					+ XML.encode(fileShortName) + "</a></td>"
+                                        + "<td>"
+                                        + lastModifiedAsString
+                                        + "</td>"
+                                        + "<td>");
+                        
 			if (!sharedEntity.isDirectory()) {
-				this.requestThread.write("title=\""
-						+ HumanReadableSize.get(sharedEntity.getFileSize())
-						+ "\" ");
-			}
-
-			this.requestThread.write("href=\"" + fileFullName + "\">"
-					+ XML.encode(fileShortName) + "</a>");
-
+                            this.requestThread.write(HumanReadableSize.get(sharedEntity.getFileSize()));
+			} else {
+                            this.requestThread.write(" - ");
+                        }
+                        this.requestThread.write("</td></tr>");
 			this.requestThread.write("\n");
 
 			fileCount++;
@@ -454,11 +467,11 @@ public class FileRequest extends Request {
 
 	public static String getFileCountHTML(int fileCount) {
 		if (fileCount == 0) {
-			return "<i>0 entries</i>";
+			return "<i>This folder is empty</i>";
 		} else if (fileCount == 1) {
-			return "<i>" + fileCount + " entry</i>";
+			return "<i>Total : " + fileCount + " entry</i>";
 		} else {
-			return "<i>" + fileCount + " entries</i>";
+			return "<i>Total : " + fileCount + " entries</i>";
 		}
 	}
 

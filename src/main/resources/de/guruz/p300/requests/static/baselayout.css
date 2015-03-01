@@ -34,7 +34,7 @@ img.icon
 }
 #left {
 clear:right;
-width:12%;
+width:20%;
 min-width: 100px;
 float:left;
 line-height:18px;
@@ -46,12 +46,11 @@ padding:5px;
 
 #right {
 float:right;
-width:86%;
+width:78%;
 right: 10px;
 } 
 #title {
 min-height:35px;
-height:40px;
 padding:5px;
 border:1px solid #000000;
 background-color:#efefef;

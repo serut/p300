@@ -101,8 +101,39 @@ public class StaticInternalFileRequest extends Request {
 		if (wfn.equals("/script.js")) {
 			return "static/script.js";
 		}
-
-		if (wfn.equals("/folder.gif")) {
+                
+		if (wfn.equals("/apaxy_theme/style.css")) {
+			return "static/apaxy_theme/style.css";
+		}
+                
+		if (wfn.equals("/apaxy_theme/folderhome.png")) {
+			return "static/apaxy_theme/folderhome.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/folder.png")) {
+			return "static/apaxy_theme/folder.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/image.png")) {
+			return "static/apaxy_theme/image.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/audio.png")) {
+			return "static/apaxy_theme/audio.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/zip.png")) {
+			return "static/apaxy_theme/zip.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/video.png")) {
+			return "static/apaxy_theme/video.png";
+		}
+                
+		if (wfn.equals("/apaxy_theme/default.png")) {
+			return "static/apaxy_theme/default.png";
+		}
+                if (wfn.equals("/folder.gif")) {
 			return StaticInternalFileRequest.iconFileNames[0];
 		}
 		if (wfn.equals("/comp_blue.gif")) {

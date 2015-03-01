@@ -152,22 +152,12 @@ public class Layouter {
 			this.replace(Layouter.markerUserStyleSheet, "");
 		}
 
-		this.replaceThisIsWebinterfaceMessage();
 		this.replaceTheConfig();
 		this.replaceTheNetwork();
 		// If it's a search, this has already been replaced.
 		// If it's not a search, we can safely replace this.
 		this.replaceSearchString("Search...");
 		this.replaceGoToIndex();
-	}
-
-	private void replaceThisIsWebinterfaceMessage() {
-		if (!this.requestThread.isAuthenticated()) {
-			this
-					.replace(
-							Layouter.markerThisIsWebinterfaceMessage,
-							"<div id='thisiswebinterfacemessage'><p>This is only the webinterface. You should <b><a href='http://p300.eu/download/'>get p300</a></b> for a better user experience :)</p></div>");
-		}
 	}
 
 	// FIXME: change the logic. the index should tell the layouter that it
@@ -238,7 +228,7 @@ public class Layouter {
 		StringBuilder sb = new StringBuilder();
 
 		if (this.requestThread.isAuthenticated()) {
-			sb.append("<hr><p>Configuration:<br>");
+			sb.append("<hr><p>Admin configuration:<br>");
 			sb
 					.append("&nbsp;&nbsp;<a href=\"/config/autoUpdater\">Auto Updater</a><br>");
 			sb
@@ -300,7 +290,7 @@ public class Layouter {
 			ret = ret.concat("&nbsp;&nbsp;&nbsp;&nbsp;<img src='");
 
 			if ((this.openedShare == null) || !element.equals(this.openedShare)) {
-				ret = ret.concat("/folder.gif");
+				ret = ret.concat("/apaxy_theme/folder.png");
 			} else {
 				ret = ret.concat("/folder_open.gif");
 			}

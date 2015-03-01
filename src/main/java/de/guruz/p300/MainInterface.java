@@ -16,6 +16,7 @@ import de.guruz.p300.windowui.panels.ConfigurationPanel;
 import de.guruz.p300.windowui.panels.ConsolePanel;
 import de.guruz.p300.windowui.panels.DownloadsPanel;
 import de.guruz.p300.windowui.panels.UploadsPanel;
+
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Window;
@@ -28,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import de.guruz.guruzsplash.interfaces.GuruzsplashManager;
 import de.guruz.guruztray.interfaces.GuruztrayManager;
 import de.guruz.p300.logging.D;
@@ -39,32 +41,65 @@ import java.net.URL;
  */
 public class MainInterface extends javax.swing.JFrame implements OSXCallbackInterface {
 
-    //
     private static MainInterface instance = new MainInterface();
+    private static Window currentWindow = null;
+    public UploadsPanel uploadsPanel;
+    public DownloadsPanel downloadsPanel;
+    /**
+     * @author guruz
+     * @see de.guruz.guruztray.interfaces.GuruztrayManager
+     */
+    GuruztrayManager guruztrayManager = null;
+    ConsolePanel consolePanel;
+    ConfigurationPanel configurationPanel;
+    JTextArea consoleField;
+    private GuruzsplashManager guruzsplashManager;
+    private Map<JComponent, Window> frames = new HashMap<JComponent, Window>();
+    private LanMessageRouter lanMessageRouter = null;
+    private ChatWindowMap chatWindowMap = null;
+    // Variables declaration - do not modify                     
+    private javax.swing.JMenuItem consoleLogMenuItem;
+    private de.guruz.p300.windowui.panels.DownloadDirectoryConfigurationPanel downloadDirectoryConfigurationPanel2;
+    private javax.swing.JScrollPane downloadScrollPane;
+    private de.guruz.p300.windowui.panels.DownloadsPanel downloadsPanel1;
+    private javax.swing.JScrollPane explorePane;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem githubProjectMenuItem;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenu logMenu;
+    private de.guruz.p300.windowui.panels.NetworkPeerTreePanel networkPeerTreePanel1;
+    private de.guruz.p300.windowui.panels.PasswordConfigurationPanel passwordConfigurationPanel21;
+    private javax.swing.JMenuItem quitMenuItem;
+    private de.guruz.p300.windowui.panels.ShareDirectoryConfigurationPanel shareDirectoryConfigurationPanel1;
+    private javax.swing.JScrollPane shareFolderScrollPane;
+    private de.guruz.p300.windowui.panels.SoundChatConfigurationPanel soundChatConfigurationPanel1;
+    private javax.swing.JMenuItem suggestFeatureMenuItem;
+    private javax.swing.JMenuItem uploadLogMenuItem;
+    private javax.swing.JMenu webInterfaceMenu;
 
+
+    //
+    // SIGNLETON DESIGN
+    //
     private MainInterface() {
     }
 
     public static MainInterface getInstance() {
         return instance;
     }
-    /* ATTRIBUTES */
 
-    //
-    // SIGNLETON DESIGN
-    // 
-    
-    private GuruzsplashManager guruzsplashManager;
-    
-    /**
-     *
-     *
-     * @author guruz
-     * @see de.guruz.guruztray.interfaces.GuruztrayManager
-     */
-    GuruztrayManager guruztrayManager = null;
+    public static Window getWindow() {
+        return currentWindow;
+    }
 
-    //PRIVATE METHOD
     /**
      * Hide the splash screen after one second
      *
@@ -85,13 +120,11 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         }
     }
 
-    //
-
     /**
      * Initialize and show the splash screen
      *
      * @return True: Splash is visible; False: Splash not visible (might be no
-     *         GUI)
+     * GUI)
      * @author guruz
      * @see #guruzsplashManager
      * @see #hideSplashScreen()
@@ -122,36 +155,26 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
     public void setGUIEnabled(boolean b) {
     }
 
-
-
-    ConsolePanel consolePanel;
     public ConsolePanel getConsolePanel() {
         return consolePanel;
     }
-    public UploadsPanel uploadsPanel;
-    ConfigurationPanel configurationPanel;
-    public DownloadsPanel downloadsPanel;
+
     public DownloadsPanel getDownloadsPanel() {
         return downloadsPanel;
     }
-    private Map<JComponent, Window> frames = new HashMap<JComponent, Window>();
-    private static Window currentWindow = null;
-    
-
-    private LanMessageRouter lanMessageRouter = null;
-
-    private ChatWindowMap chatWindowMap = null;
-    JTextArea consoleField;
 
     public LanMessageRouter getLANMessageRouter() {
         return lanMessageRouter;
     }
+
     public ChatWindowMap getChatWindowMap() {
         return chatWindowMap;
     }
+
     public ConfigurationPanel getConfigurationPanel() {
         return configurationPanel;
     }
+
     /**
      * Creates new form MainDialog
      */
@@ -412,10 +435,6 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         System.exit(0);
     }
 
-    public static Window getWindow() {
-        return currentWindow;
-    }
-
     public void hideP300() {
         this.setVisible(false);
     }
@@ -425,11 +444,13 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         this.requestFocus();
         this.toFront();
     }
+
     public boolean isDownloadsPanelShown() {
         // System.out.println ("downloads panel showing " +
         // downloadsPanel.isShowing());
         return downloadsPanel.isShowing();
     }
+
     public void showSubWindow(final Image icon, final String title,
                               final JComponent c) {
         showSubWindow(icon, title, c, true);
@@ -440,10 +461,7 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         MainInterface.getInstance().showSubWindow(icon, title, c, toForeground);
     }
 
-
     /**
-     *
-     *
      * @author guruz
      */
     public void loadOSXInterface() {
@@ -474,36 +492,8 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
     public void OSXreOpenApplication() {
         this.showP300();
     }
+
     public void OSXabout() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    // Variables declaration - do not modify                     
-    private javax.swing.JMenuItem consoleLogMenuItem;
-    private de.guruz.p300.windowui.panels.DownloadDirectoryConfigurationPanel downloadDirectoryConfigurationPanel2;
-    private javax.swing.JScrollPane downloadScrollPane;
-    private de.guruz.p300.windowui.panels.DownloadsPanel downloadsPanel1;
-    private javax.swing.JScrollPane explorePane;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem githubProjectMenuItem;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JMenu logMenu;
-    private de.guruz.p300.windowui.panels.NetworkPeerTreePanel networkPeerTreePanel1;
-    private de.guruz.p300.windowui.panels.PasswordConfigurationPanel passwordConfigurationPanel21;
-    private javax.swing.JMenuItem quitMenuItem;
-    private de.guruz.p300.windowui.panels.ShareDirectoryConfigurationPanel shareDirectoryConfigurationPanel1;
-    private javax.swing.JScrollPane shareFolderScrollPane;
-    private de.guruz.p300.windowui.panels.SoundChatConfigurationPanel soundChatConfigurationPanel1;
-    private javax.swing.JMenuItem suggestFeatureMenuItem;
-    private javax.swing.JMenuItem uploadLogMenuItem;
-    private javax.swing.JMenu webInterfaceMenu;
-    // End of variables declaration                   
 }
