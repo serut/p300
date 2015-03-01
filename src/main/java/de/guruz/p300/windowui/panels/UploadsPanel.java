@@ -59,8 +59,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import de.guruz.p300.logging.JTextAreaLoggingHandler;
 import de.guruz.p300.windowui.JAutoscrollingTextArea;

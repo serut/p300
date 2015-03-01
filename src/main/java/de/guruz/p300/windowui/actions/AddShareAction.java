@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.utils.IconChooser;
 
 public class AddShareAction extends AbstractAction {
@@ -15,10 +16,10 @@ public class AddShareAction extends AbstractAction {
 
 
 	public void actionPerformed(ActionEvent arg0) {
-		MainDialog md = MainDialog.getInstance();
+        MainInterface md = MainInterface.getInstance();
 		md.showSubWindow(null, "Configuration",
-				md.configurationPanel);
-		md.configurationPanel.addShare ();
+				md.getConfigurationPanel());
+		md.getConfigurationPanel().addShare ();
 	}
 
 }

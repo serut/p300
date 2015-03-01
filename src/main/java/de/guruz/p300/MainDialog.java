@@ -166,8 +166,7 @@ import de.guruz.p300.windowui.panels.UploadsPanel;
  * @author guruz
  * 
  */
-public class MainDialog extends Object implements ActionListener,
-		OSXCallbackInterface {
+public class MainDialog {
 
 	private static final String ACTION_SEARCH = "search";
 
@@ -261,8 +260,6 @@ public class MainDialog extends Object implements ActionListener,
 
 	public static HostAllowanceManager m_hostAllowanceManager;
 
-	private static GuruzsplashManager guruzsplashManager = null;
-
 	public static String launchedByRevision = "";
 
 	/**
@@ -351,15 +348,6 @@ public class MainDialog extends Object implements ActionListener,
 		return MainDialog.myURL;
 	}
 
-	/**
-	 * 
-	 * 
-	 * @return
-	 * @author guruz
-	 */
-	public static Window getWindow() {
-		return MainDialog.getInstance().realWindow;
-	}
 
 	/**
 	 * Read paramteres and do stuff
@@ -487,7 +475,6 @@ public class MainDialog extends Object implements ActionListener,
 		}
 
 		// see if we have java 1.6 and a splash screen
-		//MainDialog.initSplashScreen();
         MainInterface.getInstance().initSplashScreen();
         
 		try {
@@ -527,7 +514,7 @@ public class MainDialog extends Object implements ActionListener,
 		if (!MainDialog.isHeadless()) {
 			// show the main dialog
 			try {
-				MainDialog.instance = new MainDialog();
+                MainInterface.getInstance().createGUI();
 				MainDialog.graphicConsoleEnabled = true;
 			} catch (Throwable t) {
 				D
@@ -539,7 +526,7 @@ public class MainDialog extends Object implements ActionListener,
 			}
 		}
 
-		if (MainDialog.instance != null) {
+		if (MainDialog.graphicConsoleEnabled != false) {
 			D
 					.out("Graphic mode. CTRL+C or close window to exit. Restart with parameter --help for help");
 		} else {
@@ -567,20 +554,20 @@ public class MainDialog extends Object implements ActionListener,
 		MainDialog.handleFirstStart();
 
 		if (!MainDialog.isHeadless() && MainDialog.instance != null) {
-			MainDialog.instance.setGUIEnabled(true);
+			MainInterface.getInstance().setGUIEnabled(true);
 
 			if ((MainInterface.getInstance().guruztrayManager != null)
 					&& !Configuration.instance().isFirstStart()) {
 				// if we have a tray icon and this is NOT the first start then
 				// hide oursevles
 				// this is for using p300 in autorun
-				MainDialog.instance.hideP300();
+                MainInterface.getInstance().hideP300();
 			} else {
 				// show us :)
-				MainDialog.instance.showP300();
+                MainInterface.getInstance().showP300();
 			}
 
-			MainDialog.instance.loadOSXInterface();
+            MainInterface.getInstance().loadOSXInterface();
 
 		}
 
@@ -595,8 +582,6 @@ public class MainDialog extends Object implements ActionListener,
 	 * characters
 	 * 
 	 * @author guruz
-	 * @see de.guruz.p300.Configuration.setAdminPassword(String)
-	 * @see de.guruz.p300.utils.RandomGenerator.string()
 	 */
 	public static void resetAdminPassword() {
 		String newPass = de.guruz.p300.utils.RandomGenerator.string()
@@ -609,7 +594,6 @@ public class MainDialog extends Object implements ActionListener,
 	 * message
 	 * 
 	 * @author guruz
-	 * @see de.guruz.p300.Configuration.isFirstStart()
 	 */
 	public static void handleFirstStart() {
 		Configuration conf = Configuration.instance();
@@ -693,396 +677,6 @@ public class MainDialog extends Object implements ActionListener,
 		MainDialog.downloadManager.start();
 	}
 
-	public ChatWindowMap chatWindowMap;
-
-	public LanMessageRouter lanMessageRouter;
-
-	public ConfigurationPanel configurationPanel;
-
-	private JTextArea consoleField;
-
-	protected JScrollPane consoleFieldSP;
-
-	JPanel infoPanel = null;
-
-	/**
-	 * A panel showing a "not implemented yet" message
-	 * 
-	 * @author guruz
-	 */
-	protected JPanel notImplementedYetPanel;
-
-	/**
-	 * A panel with the running downloads
-	 */
-	public DownloadsPanel downloadsPanel;
-
-	/**
-	 * 
-	 * 
-	 * @author guruz
-	 */
-	MainTree tree = null;
-
-	/**
-	 * The panel showing the search query + buttons
-	 * 
-	 * @author tomcat
-	 */
-
-	public JComponent consolePanel;
-
-	public JPanel uploadsPanel;
-
-	/**
-	 * 
-	 * 
-	 * @author guruz
-	 */
-	java.awt.Window realWindow = null;
-
-
-	/**
-	 * This call changes the content of the info panel at the right
-	 * 
-	 * @param c
-	 */
-	private Map<JComponent, Window> frames = new HashMap<JComponent, Window>();
-
-	private JTextField m_searchTextField;
-
-	/**
-	 * Initialize main dialog and show it This is purely GUI stuff
-	 * 
-	 * FIXME most of this stuff needs to be put out from here and put into
-	 * classes
-	 * 
-	 * @author guruz
-	 */
-	protected MainDialog() {
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				"p300");
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		}
-
-		MainDialog.instance = this;
-
-		this.infoPanel = new InfoPanel();
-
-		this.createTree();
-
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		mainPanel.add(new JScrollPane(this.tree), BorderLayout.CENTER);
-
-		JPanel searchPanel = new JPanel(new BorderLayout());
-		searchPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		final JButton searchButton = new JButton(IconChooser.getSearchIcon());
-		searchButton.setToolTipText("Search");
-		searchButton.addActionListener(this);
-		searchButton.setActionCommand(MainDialog.ACTION_SEARCH);
-		searchButton.setEnabled(false);
-
-		searchPanel.add(searchButton, BorderLayout.EAST);
-		JPanel textFieldPanel = new JPanel(new BorderLayout());
-		m_searchTextField = new JTextField();
-		textFieldPanel.add(m_searchTextField, BorderLayout.CENTER);
-		m_searchTextField.getDocument().addDocumentListener(
-				new DocumentListener() {
-
-					public void changedUpdate(DocumentEvent e) {
-						searchButton.setEnabled(m_searchTextField.getText()
-								.length() > 0);
-
-					}
-
-					public void insertUpdate(DocumentEvent e) {
-						changedUpdate(e);
-
-					}
-
-					public void removeUpdate(DocumentEvent e) {
-						changedUpdate(e);
-
-					}
-				});
-		m_searchTextField.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				m_searchTextField.requestFocusInWindow();
-
-			}
-		});
-
-		searchPanel.add(textFieldPanel, BorderLayout.CENTER);
-		mainPanel.add(searchPanel, BorderLayout.NORTH);
-
-		final JButton homeButton = new JButton(IconChooser.getSmallP300Icon());
-		homeButton.setText("p300");
-
-		JButton webinterfaceButton = new JButton(new WebinterfaceAction());
-		// webinterfaceButton.setText("");
-
-		final JPopupMenu homeMenu = MainButtonPopupMenu.instance();
-
-
-
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		// System.out.println(buttonPanel.getLayout());
-		buttonPanel.add(Box.createHorizontalGlue());
-		buttonPanel.add(homeButton);
-		buttonPanel.add(webinterfaceButton);
-		buttonPanel.add(Box.createHorizontalGlue());
-
-		homeButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				Dimension d = homeMenu.getPreferredSize();
-
-				if (d != null && d.height != 0 && d.width != 0) {
-					homeMenu.show(homeButton, 0, 0 - d.height);
-				} else {
-					homeMenu.show(homeButton, 0, 0);
-				}
-			}
-		});
-
-		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		this.notImplementedYetPanel = new NotImplementedYetPanel();
-		this.downloadsPanel = new DownloadsPanel();
-		this.configurationPanel = new ConfigurationPanel();
-		this.consolePanel = new ConsolePanel();
-		this.uploadsPanel = new UploadsPanel();
-
-		// if we have a tray we open a JDialog, else we
-		// open a JFrame
-		// because JFrame is in taskbar which we do not need
-		// when having
-		// a tray
-		boolean haveTray = this.createTrayIcon();
-
-		String windowTitle = "p300 (revision " + Configuration.getSVNRevision()
-				+ ")";
-
-		if (haveTray) {
-			this.realWindow = new JDialog((java.awt.Frame) null, windowTitle);
-			this.realWindow.setLayout(new BorderLayout());
-
-			JDialog realWindowDialog = (JDialog) this.realWindow;
-			realWindowDialog.add(mainPanel, BorderLayout.CENTER);
-			// realWindowDialog.add(splitPane,
-			// BorderLayout.CENTER);
-			// only hide when closing,
-			// closing is possible via
-			// tray menu
-			realWindowDialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-
-			realWindowDialog.getRootPane().setDefaultButton(searchButton);
-
-			// tell the tray which window to
-			// show/hide
-			MainInterface.getInstance().guruztrayManager.setAssociatedWindow(this.realWindow);
-		} else {
-			this.realWindow = new JFrame(windowTitle);
-			this.realWindow.setLayout(new BorderLayout());
-			JFrame realWindowFrame = (JFrame) this.realWindow;
-
-			// realWindowFrame.add(splitPane,
-			// BorderLayout.CENTER);
-			realWindowFrame.add(mainPanel, BorderLayout.CENTER);
-			realWindowFrame.setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
-
-			realWindowFrame.getRootPane().setDefaultButton(searchButton);
-		}
-
-		this.realWindow.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				super.windowActivated(arg0);
-				m_searchTextField.requestFocusInWindow();
-			}
-
-			@Override
-			public void windowGainedFocus(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				super.windowGainedFocus(arg0);
-				m_searchTextField.requestFocusInWindow();
-			}
-
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				super.windowOpened(arg0);
-				m_searchTextField.requestFocusInWindow();
-			}
-
-			public void windowDeactivated(WindowEvent e) {
-				try {
-					if (tree.isEditing())
-						tree.stopEditing();
-				} catch (Exception ex) {
-
-				}
-			}
-		});
-
-		// set size
-		int preferedWidth = (int) Math.max(buttonPanel.getPreferredSize()
-				.getWidth(), searchPanel.getPreferredSize().getWidth());
-		this.realWindow.setSize((int) (preferedWidth * 1.3), 350);
-
-		// the size may be larger than the screen size available
-		Rectangle screenRect = java.awt.GraphicsEnvironment
-				.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		Rectangle windowRect = this.realWindow.getBounds();
-
-		if (windowRect.width > screenRect.width) {
-			windowRect.width = screenRect.width;
-			windowRect.x = screenRect.x;
-		}
-		if (windowRect.height > screenRect.height) {
-			windowRect.height = screenRect.height;
-			windowRect.y = screenRect.y;
-		}
-
-		this.realWindow.setBounds(windowRect);
-
-		// center it
-		this.realWindow.setLocationRelativeTo(null);
-
-		// select
-		// the
-		// root
-		// node
-		this.tree.setSelectionRow(0);
-
-		// if we have do not have a splash show us now
-		if (MainDialog.guruzsplashManager == null) {
-			this.setGUIEnabled(false);
-			this.realWindow.setVisible(true);
-		}
-
-		chatWindowMap = new ChatWindowMap();
-		lanMessageRouter = new LanMessageRouter();
-		UiMessageRouter uiMessageRouter = new UiMessageRouter();
-		LanMessageRemoteOutbox lanMessageRemoteOutbox = new LanMessageRemoteOutbox();
-
-		lanMessageRouter.setUiMessageRouter(uiMessageRouter);
-		lanMessageRouter.setLanMessageRemoteOutbox(lanMessageRemoteOutbox);
-		lanMessageRemoteOutbox.setUiMessageRouter(uiMessageRouter);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		String acs = e.getActionCommand();
-
-		if (acs.equals(MainDialog.ACTION_OPEN_MY_WEBINTERFACE)) {
-			new WebinterfaceAction().actionPerformed(null);
-		} else if (acs.equals(MainDialog.ACTION_ABOUT)) {
-			String URL = MainDialog.getMyURL() + "about";
-			BareBonesBrowserLaunch.openURL(URL);
-		} else if (acs.equals(MainDialog.ACTION_QUIT)) {
-			System.exit(0);
-		} else if (acs.equals(MainDialog.ACTION_SHOW)) {
-			this.showP300();
-		} else if (acs.equals(MainDialog.ACTION_HIDE)) {
-			this.hideP300();
-		} else if (acs.equals(MainDialog.ACTION_SEARCH)) {
-			this.startSearchFromMainWindow();
-		} else if (acs
-				.equals(MainDialog.ACTION_OPEN_WEBINTERFACE_FOR_SELECTED_HOST)) {
-			try {
-				LANHostTreeItem ti = (LANHostTreeItem) tree.getEditingPath()
-						.getLastPathComponent();
-				String url = ti.getHost().toURL();
-				BareBonesBrowserLaunch.openURL(url);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else if (acs.equals(MainDialog.ACTION_BROWSE_SELECTED_HOST)) {
-			try {
-				LANHostTreeItem ti = (LANHostTreeItem) tree.getEditingPath()
-						.getLastPathComponent();
-
-				new BrowseHostAction(ti.getHost(), null).actionPerformed(null);
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else if (acs.equals(MainDialog.ACTION_OPEN_CHAT_FOR_SELECTED_HOST)) {
-			try {
-				LANHostTreeItem ti = (LANHostTreeItem) tree.getEditingPath()
-						.getLastPathComponent();
-
-				Host host = ti.getHost();
-				ChatWindowMap cwm = MainDialog.getInstance().chatWindowMap;
-
-				if (cwm != null) {
-					cwm.getChatWindowFor(host).setVisible(true);
-					cwm.getChatComponentFor(host).tryToFocusInputField();
-				}
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-
-	}
-
-	public void showSubWindow(final Image icon, final String title,
-			final JComponent c) {
-		showSubWindow(icon, title, c, true);
-	}
-
-	public void showSubWindow(final Image icon, final String title,
-			final JComponent c, final boolean toForeground) {
-		if (c == null)
-			return;
-
-		final Window f;
-		if (frames.containsKey(c))
-			f = frames.get(c);
-		else {
-			f = new JFrame();
-			((JFrame) f).setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			f.add(c);
-			f.setSize(new Dimension(800, 600));
-			f.setLocationByPlatform(true);
-			frames.put(c, f);
-		}
-
-		Runnable r = new Runnable() {
-			public void run() {
-				((JFrame) f).setTitle(title);
-				if (toForeground || !f.isVisible())
-					f.setVisible(true);
-			}
-		};
-
-		if (SwingUtilities.isEventDispatchThread()) {
-			r.run();
-		} else {
-			try {
-				SwingUtilities.invokeAndWait(r);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	/**
 	 * Adds a string to our console text area
 	 * 
@@ -1090,7 +684,7 @@ public class MainDialog extends Object implements ActionListener,
 	 * @author guruz
 	 */
 	public void consolePrint(String s) {
-		this.consoleField.append(s);
+        MainInterface.getInstance().consoleField.append(s);
 	}
 
 	/**
@@ -1100,329 +694,10 @@ public class MainDialog extends Object implements ActionListener,
 	 * @author guruz
 	 */
 	public void consolePrintln(String line) {
-		this.consoleField.append(line);
-		this.consoleField.append("\n");
+		MainInterface.getInstance().consoleField.append(line);
+        MainInterface.getInstance().consoleField.append("\n");
 	}
 
-	/**
-	 * Initialize and show the tray icon if support is there
-	 * 
-	 * @author guruz
-	 * @return True: Tray icon visible; False: No tray icon support
-	 * @see #guruztrayManager
-	 */
-	protected boolean createTrayIcon() {
-
-		try {
-			String className = "de.guruz.guruztray.implementation.GuruztrayManagerImplementation";
-			Class<?> c = Class.forName(className);
-			Object o = c.newInstance();
-			MainInterface.getInstance().guruztrayManager = (GuruztrayManager) o;
-
-			// System.out.println ("Tray supported = " +
-			// guruztrayManager.isSupported());
-
-			if (!MainInterface.getInstance().guruztrayManager.isSupported()) {
-				throw new Exception("Tray not supported");
-			}
-
-			Image im_22x22 = null;
-			java.net.URL imgURL = Thread.currentThread()
-					.getContextClassLoader().getResource(
-							"de/guruz/p300/requests/static/trayicon_22x22.png");
-			if (imgURL != null) {
-				im_22x22 = Toolkit.getDefaultToolkit().createImage(imgURL);
-			} else {
-				System.err.println("Couldn't load image");
-				throw new Exception("Image for tray icon could not be loaded");
-			}
-
-			Image im_16x16 = null;
-			imgURL = Thread.currentThread().getContextClassLoader()
-					.getResource(
-							"de/guruz/p300/requests/static/trayicon_16x16.png");
-			if (imgURL != null) {
-				im_16x16 = Toolkit.getDefaultToolkit().createImage(imgURL);
-			} else {
-				System.err.println("Couldn't load image");
-				throw new Exception("Image for tray icon could not be loaded");
-			}
-
-			// test
-			// p300.png
-			imgURL = Thread.currentThread().getContextClassLoader()
-					.getResource(
-							"de/guruz/p300/requests/static/p300_bordered.png");
-			if (imgURL != null) {
-				im_16x16 = Toolkit.getDefaultToolkit().createImage(imgURL);
-				im_22x22 = Toolkit.getDefaultToolkit().createImage(imgURL);
-			} else {
-				System.err.println("Couldn't load image");
-				throw new Exception("Image for tray icon could not be loaded");
-			}
-
-			PopupMenu pm = new PopupMenu();
-
-			MenuItem mi = null;
-
-			mi = new MenuItem("Show");
-			mi.setActionCommand(MainDialog.ACTION_SHOW);
-			mi.addActionListener(this);
-			pm.add(mi);
-			mi = new MenuItem("Open Webinterface");
-			mi.setActionCommand(MainDialog.ACTION_OPEN_MY_WEBINTERFACE);
-			mi.addActionListener(this);
-			pm.add(mi);
-
-			pm.addSeparator();
-
-			mi = new MenuItem("Hide");
-			mi.setActionCommand(MainDialog.ACTION_HIDE);
-			mi.addActionListener(this);
-			// mi.setEnabled(false);
-			pm.add(mi);
-			mi = new MenuItem("Quit");
-			mi.setActionCommand(MainDialog.ACTION_QUIT);
-			mi.addActionListener(this);
-			// mi.setEnabled(false);
-			pm.add(mi);
-
-			pm.addSeparator();
-
-			mi = new MenuItem("About");
-			mi.setActionCommand(MainDialog.ACTION_ABOUT);
-			mi.addActionListener(this);
-			mi.setEnabled(true);
-			pm.add(mi);
-
-			MainInterface.getInstance().guruztrayManager.setTrayIcon(im_16x16, im_22x22, "p300", pm);
-
-		} catch (Throwable t) {
-			D
-					.out("No tray icon supported on this platform or java version (msg=\""
-							+ t.getMessage() + "\"");
-
-			// t.printStackTrace();
-			return false;
-		}
-		;
-
-		return (true);
-
-	}
-
-	private void createTree() {
-		MainDialogTreeModel mdtm = MainDialogTreeModel.instance();
-		this.tree = new MainTree(mdtm);
-		this.tree.setRootVisible(false);
-		this.tree.setRowHeight(0);
-		this.tree.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
-
-		this.tree.setShowsRootHandles(false);
-
-		for (int i = 0; i < 10; i++) {
-			this.tree.expandRow(i);
-		}
-
-		tree.setEditable(true);
-		MainDialogTreeCellRenderer treeCellRender = new MainDialogTreeCellRenderer(
-				tree);
-		MainDialogTreeCellEditor treeCellEditor = new MainDialogTreeCellEditor(
-				treeCellRender, tree);
-
-		this.tree.setCellEditor(treeCellEditor);
-		this.tree.setCellRenderer(treeCellRender);
-
-		this.tree.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent me) {
-
-			}
-
-			public void mouseEntered(MouseEvent arg0) {
-
-			}
-
-			public void mouseExited(MouseEvent arg0) {
-
-			}
-
-			public void mousePressed(MouseEvent me) {
-				if (me.getClickCount() > 1 && me.getButton() == me.BUTTON1) {
-					me.consume();
-					if (tree.getSelectionPath() != null
-							&& tree.getSelectionPath().getLastPathComponent() == InternetHostsTreeItem
-									.instance())
-						showSubWindow(null, "Not implemented yet",
-								notImplementedYetPanel);
-					else if (tree.getSelectionPath() != null
-							&& tree.getSelectionPath().getLastPathComponent() == LANHostsTreeItem
-									.instance())
-						new AddHostAction().actionPerformed(null);
-				}
-
-			}
-
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		this.tree.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				try {
-					if (!realWindow.isActive())
-						return;
-
-					TreePath p = tree.getClosestPathForLocation(e.getX(), e
-							.getY());
-
-					if (p != null)
-						tree.setSelectionPath(p);
-
-					if (tree.getEditingPath() != p
-							&& p.getLastPathComponent() instanceof LANHostTreeItem) {
-						// System.out.println ("mouse motion listener");
-						tree.setSelectionPath(p);
-						tree.startEditingAtPath(p);
-
-					}
-
-					if (!(p.getLastPathComponent() instanceof LANHostTreeItem)) {
-						tree.stopEditing();
-					}
-
-				} catch (Exception ex) {
-
-				}
-
-			}
-		});
-
-		this.tree.addTreeWillExpandListener(new TreeWillExpandListener() {
-
-			public void treeWillCollapse(TreeExpansionEvent event)
-					throws ExpandVetoException {
-				throw new ExpandVetoException(event);
-			}
-
-			public void treeWillExpand(TreeExpansionEvent event)
-					throws ExpandVetoException {
-			}
-		});
-	}
-
-	/**
-	 * Hide the p300 window
-	 * 
-	 * @author guruz
-	 */
-	private void hideP300() {
-		if (this.realWindow == null) {
-			return;
-		}
-
-		this.realWindow.setVisible(false);
-
-	}
-
-	public boolean isDownloadsPanelShown() {
-		// System.out.println ("downloads panel showing " +
-		// downloadsPanel.isShowing());
-		return downloadsPanel.isShowing();
-	}
-
-	/**
-	 * 
-	 * 
-	 * @author guruz
-	 */
-	private void loadOSXInterface() {
-		if (!OsUtils.isOSX()) {
-			return;
-		}
-
-		try {
-			OSXInterface i = null;
-			String className = "de.guruz.p300.osx.OSX";
-			Class<?> c = Class.forName(className);
-			Object o = c.newInstance();
-			i = (OSXInterface) o;
-			i.setCallback(this);
-
-		} catch (Throwable t) {
-			// e.printStackTrace();
-			return;
-		}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.guruz.p300.osx.OSXCallbackInterface#OSXabout()
-	 */
-	public void OSXabout() {
-		// System.out.println ("OSX about");
-		this.actionPerformed(new ActionEvent(this, 0, MainDialog.ACTION_ABOUT));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.guruz.p300.osx.OSXCallbackInterface#OSXreOpenApplication()
-	 */
-	public void OSXreOpenApplication() {
-		this.showP300();
-	}
-
-	/**
-	 * 
-	 * 
-	 * @param b
-	 * @author guruz
-	 */
-	private void setGUIEnabled(boolean b) {
-		this.tree.setEnabled(b);
-	}
-
-	/**
-	 * 
-	 * 
-	 * @author guruz
-	 */
-	private void showP300() {
-		if (this.realWindow == null) {
-			return;
-		}
-
-		// this.valueChanged(null);
-		this.realWindow.setVisible(true);
-		this.realWindow.requestFocus();
-		this.realWindow.toFront();
-	}
-
-	private void startSearchFromMainWindow() {
-		String s = m_searchTextField.getText();
-		SearchResultsWindow srw = new SearchResultsWindow(s);
-
-		// JFrame f = new JFrame ();
-		// f.setTitle(srw.getTitle ());
-		// f.setLocationByPlatform(true);
-		// f.setVisible(true);
-
-		showSubWindow(null, srw.getTitle(), srw);
-
-		srw.asyncSearchStartAllHosts();
-
-	}
 
 	public static HostAllowanceManager getHostAllowanceManager() {
 		return m_hostAllowanceManager;

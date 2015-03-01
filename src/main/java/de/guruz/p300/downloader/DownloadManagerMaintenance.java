@@ -47,7 +47,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.dirbrowser.RemoteDir;
 import de.guruz.p300.dirbrowser.RemoteEntity;
 import de.guruz.p300.dirbrowser.RemoteFile;
@@ -135,7 +135,7 @@ public class DownloadManagerMaintenance extends Object {
 			if (de.getState() == DownloadState.CAN_REMOVE_DOWNLOAD) {
 				it.remove();
 				
-				MainDialog.getInstance().downloadsPanel.addFinishedDownload (de);
+				MainInterface.getInstance().getDownloadsPanel().addFinishedDownload (de);
 			}
 		}
 	}

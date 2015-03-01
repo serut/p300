@@ -79,13 +79,12 @@ import javax.swing.event.ChangeListener;
 
 import de.guruz.p300.Configuration;
 import de.guruz.p300.MainDialog;
-import de.guruz.p300.logging.D;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.search.IndexerThread;
 import de.guruz.p300.shares.ShareManager;
 import de.guruz.p300.utils.DirectoryPicker;
 import de.guruz.p300.utils.DirectoryUtils;
 import de.guruz.p300.utils.FileNameUtils;
-import de.guruz.p300.utils.FileUtils;
 import de.guruz.p300.utils.IconChooser;
 import de.guruz.p300.windowui.ShareTableModel;
 
@@ -174,7 +173,6 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 			openWebinterfaceButton = new JButton("Open Webinterface");
 			openWebinterfaceButton
 					.setActionCommand(MainDialog.ACTION_OPEN_MY_WEBINTERFACE);
-			openWebinterfaceButton.addActionListener(MainDialog.getInstance());
 
 			webInterfacePanel.add(this.openWebinterfaceButton);
 
@@ -320,7 +318,7 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 					.getAdminPassword());
 		} else if (acs.equals(MainDialog.ACTION_ADD_SHARE)) {
 
-			String dir = DirectoryPicker.pick(MainDialog.getWindow(), "Add",
+			String dir = DirectoryPicker.pick(MainInterface.getInstance().getWindow(), "Add",
 					null,  "Add");
 
 			if (dir != null) {
@@ -328,7 +326,7 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 
 				String s = (String) JOptionPane
 						.showInputDialog(
-								MainDialog.getWindow(),
+                                MainInterface.getInstance().getWindow(),
 								"Pick a name for a share (only normal letters and numbers)",
 								"Pick share name", JOptionPane.PLAIN_MESSAGE,
 								null, null, d.getName());
@@ -374,7 +372,7 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 			if ((s != null) && (s.length() > 0)) {
 				String old_dir = ShareManager.instance().getShare(s)
 						.getFileLocation();
-				String dir = DirectoryPicker.pick(MainDialog.getWindow(),
+				String dir = DirectoryPicker.pick(MainInterface.getInstance().getWindow(),
 						"Modify", old_dir, "Modify");
 
 				if (dir != null) {
@@ -418,7 +416,7 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 			
 			JOptionPane.showMessageDialog(null, "Download directory is " + dir + "\n\nYou can set a new one.");
 			
-			dir = DirectoryPicker.pick(MainDialog.getWindow(), "Set Download Directory",
+			dir = DirectoryPicker.pick(MainInterface.getInstance().getWindow(), "Set Download Directory",
 					dir, "Set");
 
 			if (dir != null) {

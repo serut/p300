@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.utils.IconChooser;
 
 public class ShowDownloadsAction extends AbstractAction {
@@ -22,8 +23,8 @@ public class ShowDownloadsAction extends AbstractAction {
 	
 	
 	public void actionPerformed(ActionEvent e) {
-		MainDialog.getInstance().showSubWindow(null, "Downloads",
-				MainDialog.getInstance().downloadsPanel, m_moveToForeground);
+        MainInterface.getInstance().showSubWindow(null, "Downloads",
+				MainInterface.getInstance().downloadsPanel, m_moveToForeground);
 	}
 
 }

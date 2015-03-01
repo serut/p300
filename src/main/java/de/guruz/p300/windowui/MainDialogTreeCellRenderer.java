@@ -33,41 +33,41 @@ import de.guruz.p300.windowui.maintree.MainTree;
 
 public class MainDialogTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	private MainTree m_tree;
+    private JTree m_tree;
 
-	public MainDialogTreeCellRenderer(MainTree tree) {
-		m_tree = tree;
-	}
+    public MainDialogTreeCellRenderer(JTree tree) {
+        m_tree = tree;
+    }
 
-	public Component getTreeCellRendererComponent(JTree tree, Object value,
-			boolean sel, boolean expanded, boolean leaf, int row,
-			boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value,
+                                                  boolean sel, boolean expanded, boolean leaf, int row,
+                                                  boolean hasFocus) {
 
-		
-		GenericTreeItem gti = (GenericTreeItem) value;
 
-		// JLabel caption = new JLabel ( gti.toString());
-		//JLabel caption = (JLabel) super.getTreeCellRendererComponent(tree,
-		//		value, sel, expanded, leaf, row, false);
-		JLabel caption = new JLabel (gti.toString());
-		caption.setIcon(gti.getIcon());
+        GenericTreeItem gti = (GenericTreeItem) value;
 
-		caption.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        // JLabel caption = new JLabel ( gti.toString());
+        //JLabel caption = (JLabel) super.getTreeCellRendererComponent(tree,
+        //		value, sel, expanded, leaf, row, false);
+        JLabel caption = new JLabel (gti.toString());
+        caption.setIcon(gti.getIcon());
 
-		if (sel) {
-			caption.setForeground(getTextSelectionColor());
-			caption.setBackground(getBackgroundSelectionColor());
-			caption.setOpaque(true);
-		}
-		else
-		{
-			caption.setForeground(getTextNonSelectionColor());
-			caption.setBackground(getBackgroundNonSelectionColor());
-			caption.setOpaque(false);
+        caption.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		}
+        if (sel) {
+            caption.setForeground(getTextSelectionColor());
+            caption.setBackground(getBackgroundSelectionColor());
+            caption.setOpaque(true);
+        }
+        else
+        {
+            caption.setForeground(getTextNonSelectionColor());
+            caption.setBackground(getBackgroundNonSelectionColor());
+            caption.setOpaque(false);
 
-		return caption;
+        }
 
-	}
+        return caption;
+
+    }
 }

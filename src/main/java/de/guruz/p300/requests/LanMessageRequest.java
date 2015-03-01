@@ -1,5 +1,6 @@
 package de.guruz.p300.requests;
 
+import de.guruz.p300.MainInterface;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -87,8 +88,8 @@ public class LanMessageRequest extends Request {
 
 					Message m = new Message(from, null, t);
 
-					if (MainDialog.getInstance() != null) {
-						MainDialog.getInstance().lanMessageRouter.route(m);
+					if (MainInterface.getInstance() != null) {
+						MainInterface.getInstance().getLANMessageRouter().route(m);
 					} else {
 						D.out("LanMessageRequest: Received chat message: " + t);
 					}

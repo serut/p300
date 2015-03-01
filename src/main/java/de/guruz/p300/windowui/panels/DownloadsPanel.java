@@ -76,6 +76,7 @@ import javax.swing.table.TableModel;
 
 import de.guruz.p300.Configuration;
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.affiliates.LeadBulletOpener;
 import de.guruz.p300.dirbrowser.RemoteFile;
 import de.guruz.p300.downloader.DownloadEntity;
@@ -115,17 +116,17 @@ public class DownloadsPanel extends JTabbedPane implements ListSelectionListener
 			String ac = ae.getActionCommand();
 			if (ac.equals(PAUSE))
 			{
-				JOptionPane.showMessageDialog(MainDialog.getWindow(), "Sorry, not possible yet");
+				JOptionPane.showMessageDialog(MainInterface.getInstance().getWindow(), "Sorry, not possible yet");
 			}
 			else if (ac.equals(STOP))
 			{
-				JOptionPane.showMessageDialog(MainDialog.getWindow(), "Sorry, not possible yet. Look on http://p300.eu/faq/ -> How can I abort a download?");
+				JOptionPane.showMessageDialog(MainInterface.getInstance().getWindow(), "Sorry, not possible yet. Look on http://p300.eu/faq/ -> How can I abort a download?");
 			}
 			
 			else if (ac.equals(DownloadsPanel.OPEN_DOWNLOAD_SETTINGS))
 			{
-				ConfigurationPanel cp = MainDialog.instance.configurationPanel;
-				MainDialog.instance.showSubWindow(null, "Configuration", cp, true);
+				ConfigurationPanel cp = MainInterface.getInstance().getConfigurationPanel();
+                MainInterface.getInstance().showSubWindow(null, "Configuration", cp, true);
 				cp.showDownloadSettings ();
 			}
 			else if (ac.equals(OPEN_FINISHED_DOWNLOADS_DIR))

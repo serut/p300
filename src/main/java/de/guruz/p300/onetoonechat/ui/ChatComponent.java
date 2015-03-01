@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 import de.guruz.p300.Configuration;
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.Resources;
 import de.guruz.p300.hosts.Host;
 import de.guruz.p300.logging.D;
@@ -128,7 +129,7 @@ public class ChatComponent extends JPanel implements ActionListener {
 				// D.out ("Sending!");
 
 				Message m = new Message(null, m_host, txt);
-				MainDialog.getInstance().lanMessageRouter.route(m);
+				MainInterface.getInstance().getLANMessageRouter().route(m);
 			}
 
 			m_chatInputArea.setText("");

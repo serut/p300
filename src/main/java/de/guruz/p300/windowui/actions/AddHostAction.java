@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import de.guruz.p300.Configuration;
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.logging.D;
 import de.guruz.p300.utils.IP;
 import de.guruz.p300.utils.IconChooser;
@@ -69,7 +70,7 @@ public class AddHostAction extends AbstractAction {
 		if (m_urlOrHostip == null) {
 			s = (String) JOptionPane
 					.showInputDialog(
-							MainDialog.getWindow(),
+							MainInterface.getWindow(),
 							"Enter a Hostname, Hostname:Port, IP, IP:Port or HTTP-URL of a p300 node",
 							"Manually add host", JOptionPane.PLAIN_MESSAGE,
 							null, null, null);
@@ -100,7 +101,7 @@ public class AddHostAction extends AbstractAction {
 				askHost(s + ":4337");
 			} else {
 				if (m_urlOrHostip == null)
-					JOptionPane.showMessageDialog(MainDialog.getWindow(),
+					JOptionPane.showMessageDialog(MainInterface.getWindow(),
 							"Sorry, invalid input");
 			}
 		}

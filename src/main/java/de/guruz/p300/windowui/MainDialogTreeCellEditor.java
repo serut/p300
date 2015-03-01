@@ -3,7 +3,6 @@ package de.guruz.p300.windowui;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.EventObject;
@@ -18,217 +17,230 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreePath;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
+import de.guruz.p300.hosts.Host;
+import de.guruz.p300.onetoonechat.ui.ChatWindowMap;
 import de.guruz.p300.utils.IconChooser;
+import de.guruz.p300.utils.launchers.BareBonesBrowserLaunch;
+import de.guruz.p300.windowui.actions.BrowseHostAction;
 import de.guruz.p300.windowui.maintree.LANHostTreeItem;
-import de.guruz.p300.windowui.maintree.MainTree;
 
 public class MainDialogTreeCellEditor implements TreeCellEditor {
 
-	public MouseListener m_chatLabelMouseListener = new MouseListener() {
+    public MouseListener m_chatLabelMouseListener = new MouseListener() {
 
-		public void mouseClicked(MouseEvent e) {
-			MainDialog.getInstance().actionPerformed(
-					new ActionEvent(e.getSource(), 0,
-							MainDialog.ACTION_OPEN_CHAT_FOR_SELECTED_HOST));
-		}
+        public void mouseClicked(MouseEvent e) {
+            try {
+                LANHostTreeItem ti = (LANHostTreeItem) m_tree.getEditingPath()
+                        .getLastPathComponent();
 
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
+                Host host = ti.getHost();
+                ChatWindowMap cwm = MainInterface.getInstance().getChatWindowMap();
 
-		}
+                if (cwm != null) {
+                    cwm.getChatWindowFor(host).setVisible(true);
+                    cwm.getChatComponentFor(host).tryToFocusInputField();
+                }
 
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
-		}
+        public void mouseEntered(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        public void mouseExited(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        public void mousePressed(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-	};
+        }
 
-	public MouseListener m_browseLabelMouseListener = new MouseListener() {
+        public void mouseReleased(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mouseClicked(MouseEvent e) {
-			MainDialog
-			.getInstance()
-			.actionPerformed(
-					new ActionEvent(
-							e.getSource(),
-							0,
-							MainDialog.ACTION_BROWSE_SELECTED_HOST));
-		}
+        }
 
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
+    };
 
-		}
+    public MouseListener m_browseLabelMouseListener = new MouseListener() {
 
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
+        public void mouseClicked(MouseEvent e) {
+            try {
+                LANHostTreeItem ti = (LANHostTreeItem) m_tree.getEditingPath()
+                        .getLastPathComponent();
 
-		}
+                new BrowseHostAction(ti.getHost(), null).actionPerformed(null);
 
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
-		}
+        public void mouseEntered(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        public void mouseExited(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-	};
+        }
 
-	private MouseListener m_webinterfaceLabelMouseListener = new MouseListener() {
+        public void mousePressed(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mouseClicked(MouseEvent e) {
-			MainDialog
-					.getInstance()
-					.actionPerformed(
-							new ActionEvent(
-									e.getSource(),
-									0,
-									MainDialog.ACTION_OPEN_WEBINTERFACE_FOR_SELECTED_HOST));
+        }
 
-		}
+        public void mouseReleased(MouseEvent e) {
+            // TODO Auto-generated method stub
 
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+        }
 
-		}
+    };
 
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+    private MouseListener m_webinterfaceLabelMouseListener = new MouseListener() {
 
-		}
+        public void mouseClicked(MouseEvent e) {
+            try {
+                LANHostTreeItem ti = (LANHostTreeItem) m_tree.getEditingPath()
+                        .getLastPathComponent();
+                String url = ti.getHost().toURL();
+                BareBonesBrowserLaunch.openURL(url);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        public void mouseEntered(MouseEvent arg0) {
+            // TODO Auto-generated method stub
 
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+        }
 
-		}
-	};
+        public void mouseExited(MouseEvent arg0) {
+            // TODO Auto-generated method stub
 
-	private MainTree m_tree;
-	private MainDialogTreeCellRenderer m_treeCellRender;
+        }
 
-	public MainDialogTreeCellEditor(MainDialogTreeCellRenderer treeCellRender,
-			MainTree tree) {
-		m_tree = tree;
-		m_treeCellRender = treeCellRender;
-	}
+        public void mousePressed(MouseEvent arg0) {
+            // TODO Auto-generated method stub
 
-	public Component getTreeCellEditorComponent(JTree tree, Object o,
-			boolean isSelected, boolean expanded, boolean leaf, int row) {
+        }
 
-		//System.out.println("getTreeCellEditorComponent (isEditing="
-		//		+ tree.isEditing() + ")");
+        public void mouseReleased(MouseEvent arg0) {
+            // TODO Auto-generated method stub
 
-		JLabel template = (JLabel) m_treeCellRender
-				.getTreeCellRendererComponent(tree, o, isSelected, expanded,
-						leaf, row, true);
-		//caption.setBorder(BorderFactory.createEmptyBorder());
+        }
+    };
 
-		FlowLayout fl = new FlowLayout(FlowLayout.LEFT, 3, 3);
-		JPanel p = new JPanel(fl);
+    private JTree m_tree;
+    private MainDialogTreeCellRenderer m_treeCellRender;
 
-		//System.out.println (template.getBackground());
-		
-		
-		//p.add(new JLabel (caption.getText()));
-		
-		JLabel caption = new JLabel ();
-		caption.setText(template.getText());
-		caption.setIcon(template.getIcon());
-		
-		//p.setOpaque(false);
-		p.setBackground(m_treeCellRender.getBackgroundSelectionColor());
-		caption.setBackground(m_treeCellRender.getBackgroundSelectionColor());
-		caption.setForeground(m_treeCellRender.getTextSelectionColor());
-		p.add(caption);
-		
+    public MainDialogTreeCellEditor(MainDialogTreeCellRenderer treeCellRender,
+                                    JTree tree) {
+        m_tree = tree;
+        m_treeCellRender = treeCellRender;
+    }
 
-		if (o instanceof LANHostTreeItem) {
-			//System.out.println("JA!");
+    public Component getTreeCellEditorComponent(JTree tree, Object o,
+                                                boolean isSelected, boolean expanded, boolean leaf, int row) {
 
-			JLabel browseLabel = new JLabel(IconChooser.getBrowseIcon(),
-					SwingConstants.LEFT);
-			browseLabel.setToolTipText("Browse");
-			browseLabel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
-			browseLabel.setOpaque(false);
-			browseLabel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.HAND_CURSOR));
-			browseLabel.addMouseListener(m_browseLabelMouseListener);
+        //System.out.println("getTreeCellEditorComponent (isEditing="
+        //		+ tree.isEditing() + ")");
+        JLabel template = (JLabel) m_treeCellRender
+                .getTreeCellRendererComponent(tree, o, isSelected, expanded,
+                        leaf, row, true);
+        //caption.setBorder(BorderFactory.createEmptyBorder());
 
-			JLabel chatLabel = new JLabel(IconChooser.getChatIcon(),
-					SwingConstants.LEFT);
-			chatLabel.setToolTipText("Chat");
-			chatLabel.setOpaque(false);
-			chatLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			chatLabel.addMouseListener(m_chatLabelMouseListener);
+        FlowLayout fl = new FlowLayout(FlowLayout.LEFT, 3, 3);
+        JPanel p = new JPanel(fl);
 
-			JLabel webinterfaceLabel = new JLabel(IconChooser
-					.getWebinterfaceIcon(), SwingConstants.LEFT);
-			webinterfaceLabel.setToolTipText("Webinterface");
-			webinterfaceLabel.setOpaque(false);
-			webinterfaceLabel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.HAND_CURSOR));
-			webinterfaceLabel
-					.addMouseListener(m_webinterfaceLabelMouseListener);
+        //System.out.println (template.getBackground());
+        //p.add(new JLabel (caption.getText()));
+        JLabel caption = new JLabel();
+        caption.setText(template.getText());
+        caption.setIcon(template.getIcon());
 
-			p.add(browseLabel);
-			p.add(chatLabel);
-			p.add(webinterfaceLabel);
-		}
+        //p.setOpaque(false);
+        p.setBackground(m_treeCellRender.getBackgroundSelectionColor());
+        caption.setBackground(m_treeCellRender.getBackgroundSelectionColor());
+        caption.setForeground(m_treeCellRender.getTextSelectionColor());
+        p.add(caption);
 
-		//p.setOpaque(false);
+        if (o instanceof LANHostTreeItem) {
+            //System.out.println("JA!");
 
-		return p;
+            JLabel browseLabel = new JLabel(IconChooser.getBrowseIcon(),
+                    SwingConstants.LEFT);
+            browseLabel.setToolTipText("Browse");
+            browseLabel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+            browseLabel.setOpaque(false);
+            browseLabel.setCursor(Cursor
+                    .getPredefinedCursor(Cursor.HAND_CURSOR));
+            browseLabel.addMouseListener(m_browseLabelMouseListener);
 
-	}
+            JLabel chatLabel = new JLabel(IconChooser.getChatIcon(),
+                    SwingConstants.LEFT);
+            chatLabel.setToolTipText("Chat");
+            chatLabel.setOpaque(false);
+            chatLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            chatLabel.addMouseListener(m_chatLabelMouseListener);
 
-	public void addCellEditorListener(CellEditorListener arg0) {
-	}
+            JLabel webinterfaceLabel = new JLabel(IconChooser
+                    .getWebinterfaceIcon(), SwingConstants.LEFT);
+            webinterfaceLabel.setToolTipText("Webinterface");
+            webinterfaceLabel.setOpaque(false);
+            webinterfaceLabel.setCursor(Cursor
+                    .getPredefinedCursor(Cursor.HAND_CURSOR));
+            webinterfaceLabel
+                    .addMouseListener(m_webinterfaceLabelMouseListener);
 
-	public void cancelCellEditing() {
-	}
+            p.add(browseLabel);
+            p.add(chatLabel);
+            p.add(webinterfaceLabel);
+        }
 
-	public Object getCellEditorValue() {
-		return null;
-	}
+        //p.setOpaque(false);
+        return p;
 
-	public boolean isCellEditable(EventObject e) {
-		TreePath tp = m_tree.getSelectionPath();
-		if (tp != null && tp.getLastPathComponent() instanceof LANHostTreeItem) {
-			return true;
-		} else {
-			return false;
-		}
+    }
 
-	}
+    public void addCellEditorListener(CellEditorListener arg0) {
+    }
 
-	public void removeCellEditorListener(CellEditorListener arg0) {
-	}
+    public void cancelCellEditing() {
+    }
 
-	public boolean shouldSelectCell(EventObject arg0) {
-		return false;
-	}
+    public Object getCellEditorValue() {
+        return null;
+    }
 
-	public boolean stopCellEditing() {
-		return true;
-	}
+    public boolean isCellEditable(EventObject e) {
+        TreePath tp = m_tree.getSelectionPath();
+        if (tp != null && tp.getLastPathComponent() instanceof LANHostTreeItem) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public void removeCellEditorListener(CellEditorListener arg0) {
+    }
+
+    public boolean shouldSelectCell(EventObject arg0) {
+        return false;
+    }
+
+    public boolean stopCellEditing() {
+        return true;
+    }
 
 }

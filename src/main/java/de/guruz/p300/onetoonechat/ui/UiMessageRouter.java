@@ -1,6 +1,7 @@
 package de.guruz.p300.onetoonechat.ui;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.hosts.Host;
 import de.guruz.p300.onetoonechat.Message;
 
@@ -17,7 +18,7 @@ public class UiMessageRouter {
 		
 		if (h != null)
 		{
-			ChatWindowMap cwm = MainDialog.getInstance().chatWindowMap;
+			ChatWindowMap cwm = MainInterface.getInstance().getChatWindowMap();
 			if (cwm != null){
 				ChatComponent cc = cwm.getChatComponentFor(h);
 				cc.addToConversation (m);

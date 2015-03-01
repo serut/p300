@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.utils.IconChooser;
 
 public class ConfigurationAction extends AbstractAction {
@@ -14,8 +15,8 @@ public class ConfigurationAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		MainDialog.getInstance().showSubWindow(null, "Configuration",
-				MainDialog.getInstance().configurationPanel);
+		MainInterface.getInstance().showSubWindow(null, "Configuration",
+				MainInterface.getInstance().getConfigurationPanel());
 	}
 
 }

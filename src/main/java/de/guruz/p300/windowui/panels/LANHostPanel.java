@@ -66,6 +66,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.dirbrowser.BrowserWidget;
 import de.guruz.p300.dirbrowser.RemoteDir;
 import de.guruz.p300.hosts.Host;
@@ -178,11 +179,11 @@ public class LANHostPanel extends JPanel implements ActionListener {
 			if (s != null && s.trim().length() > 0)
 			{
 				SearchResultsWindow srw = new SearchResultsWindow(s);
-				MainDialog.getInstance().showSubWindow(null, srw.getTitle(), srw);
+                MainInterface.getInstance().showSubWindow(null, srw.getTitle(), srw);
 				srw.asyncSearchStartOneHost(host);
 			}
 		} else if (acs.equals(LANHostPanel.CHAT)) {
-			ChatWindowMap cwm = MainDialog.getInstance().chatWindowMap;
+			ChatWindowMap cwm = MainInterface.getInstance().getChatWindowMap();
 			
 			if (cwm != null)
 			{

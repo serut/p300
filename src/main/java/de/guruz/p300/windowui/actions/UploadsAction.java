@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.guruz.p300.MainDialog;
+import de.guruz.p300.MainInterface;
 import de.guruz.p300.utils.IconChooser;
 
 public class UploadsAction extends AbstractAction {
@@ -14,8 +15,8 @@ public class UploadsAction extends AbstractAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		MainDialog.getInstance().showSubWindow(null, "Uploads",
-				MainDialog.getInstance().uploadsPanel);
+        MainInterface.getInstance().showSubWindow(null, "Uploads",
+                MainInterface.getInstance().uploadsPanel);
 	}
 
 }
