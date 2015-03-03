@@ -22,10 +22,8 @@
 
 <hr>
 <form action="/search" class="searcharea" name="searchform" accept-charset="UTF-8">
-  &nbsp;&nbsp;<input name="searchString" class="searchstring" value="@p300.searchstring@" onFocus="f(this, 'Search...');" onBlur="b(this, 'Search...'); enableSearchButton();" onKeyUp="enableSearchButton();" title="Default is plain text search. 'REGEX <regex>' searches for a regular expression"><br>
-  &nbsp;&nbsp;<select name="searchType" class="searchtype" disabled>
-    <option value="0">This host</option>
-  </select><br>
+  &nbsp;&nbsp;<input name="searchString" class="searchstring" value="@p300.searchstring@" onFocus="f(this, 'Search on current host...');" onBlur="b(this, 'Search on current host...'); enableSearchButton();" onKeyUp="enableSearchButton();" title="Default is plain text search. 'REGEX <regex>' searches for a regular expression">
+    <input type="hidden" name="searchType" value="0">
   &nbsp;&nbsp;<input name="searchButton" type="submit" value="Search" class="searchbutton">
 </form>
 
