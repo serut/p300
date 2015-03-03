@@ -543,13 +543,6 @@ public class MainDialog {
 			D.out("Exiting because of exception");
 			return;
 		}
-		// de the splash, no matter if it exists or is visible
-		Runnable r = new Runnable() {
-			public void run() {
-				MainInterface.getInstance().hideSplashScreen();
-			}
-		};
-		new Thread(r).start();
 
 		MainDialog.handleFirstStart();
 
@@ -666,10 +659,10 @@ public class MainDialog {
 		MainDialog.updaterThread.start();
 		MainDialog.newVersionNotificationThread.start();
 
-		if (MainDialog.instance != null) {
-			MainDialog.hostWatchThread.addObserver(LANHostsTreeItem.instance());
-		}
 		MainDialog.hostWatchThread.addObserver(MainDialog.hostMap);
+
+		MainDialog.hostWatchThread.addObserver(LANHostsTreeItem.instance());
+
 		MainDialog.hostWatchThread.start();
 
 		MainDialog.internetListenThread.start();
