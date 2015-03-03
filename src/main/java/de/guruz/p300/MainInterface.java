@@ -135,8 +135,6 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
             Class<?> c = Class.forName(className);
             Object o = c.newInstance();
             this.guruzsplashManager = (GuruzsplashManager) o;
-            //this.guruzsplashManager.setImageURL(new URL("./splash.png"));
-            System.out.println("Ca devrait afficher l'image");
             if (this.guruzsplashManager.isVisible()) {
                 return true;
             } else {
@@ -145,8 +143,7 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
             }
 
         } catch (Exception t) {
-            D
-                    .out("No splash screen supported on this platform or java version" + t.getMessage());
+            D.out("No splash screen supported on this platform or java version" + t.getMessage());
             this.guruzsplashManager = null;
             return false;
         }
@@ -196,7 +193,7 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         // de the splash, no matter if it exists or is visible
         Runnable r = new Runnable() {
             public void run() {
-                MainInterface.getInstance().hideSplashScreen();
+                //MainInterface.getInstance().hideSplashScreen();
                 MainInterface.getInstance().showP300();
             }
         };

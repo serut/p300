@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Component id="jTextField1" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="searchButton" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <Component id="jScrollPane1" pref="453" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="searchButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="346" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JToggleButton" name="searchButton">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchButtonActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="searchButton.setIcon(getSearchIcon());"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextField1">
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTree" name="jTree1">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="MainDialogTreeModel mdtm = MainDialogTreeModel.instance();&#xa;this.jTree1 = new MainTree(mdtm);&#xa;this.jTree1.setRootVisible(false);&#xa;this.jTree1.setRowHeight(0);&#xa;this.jTree1.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));&#xa;&#xa;this.jTree1.setShowsRootHandles(false);&#xa;&#xa;for (int i = 0; i &lt; 10; i++) {&#xa;    this.jTree1.expandRow(i);&#xa;}&#xa;&#xa;jTree1.setEditable(true);&#xa;MainDialogTreeCellRenderer treeCellRender = new MainDialogTreeCellRenderer(&#xa;        jTree1);&#xa;MainDialogTreeCellEditor treeCellEditor = new MainDialogTreeCellEditor(&#xa;        treeCellRender, jTree1);&#xa;&#xa;this.jTree1.setCellEditor(treeCellEditor);&#xa;this.jTree1.setCellRenderer(treeCellRender);&#xa;&#xa;this.jTree1.addMouseListener(new MouseListener() {&#xa;&#xa;    public void mouseClicked(MouseEvent me) {&#xa;&#xa;    }&#xa;&#xa;    public void mouseEntered(MouseEvent arg0) {&#xa;&#xa;    }&#xa;&#xa;    public void mouseExited(MouseEvent arg0) {&#xa;&#xa;    }&#xa;&#xa;    public void mousePressed(MouseEvent me) {&#xa;        if (me.getClickCount() &gt; 1 &amp;&amp; me.getButton() == me.BUTTON1) {&#xa;            me.consume();&#xa;            if (jTree1.getSelectionPath() != null&#xa;                    &amp;&amp; jTree1.getSelectionPath().getLastPathComponent() == InternetHostsTreeItem&#xa;                    .instance()) {&#xa;                showSubWindow(null, &quot;Not implemented yet&quot;,&#xa;                        notImplementedYetPanel);&#xa;            } else if (jTree1.getSelectionPath() != null&#xa;                    &amp;&amp; jTree1.getSelectionPath().getLastPathComponent() == LANHostsTreeItem&#xa;                    .instance()) {&#xa;                new AddHostAction().actionPerformed(null);&#xa;            }&#xa;        }&#xa;&#xa;    }&#xa;&#xa;    public void mouseReleased(MouseEvent arg0) {&#xa;        // TODO Auto-generated method stub&#xa;&#xa;    }&#xa;});&#xa;&#xa;this.jTree1.addMouseMotionListener(new MouseMotionListener() {&#xa;&#xa;    public void mouseDragged(MouseEvent e) {&#xa;        // TODO Auto-generated method stub&#xa;&#xa;    }&#xa;&#xa;    public void mouseMoved(MouseEvent e) {&#xa;        try {&#xa;&#xa;            TreePath p = jTree1.getClosestPathForLocation(e.getX(), e&#xa;                    .getY());&#xa;&#xa;            if (p != null) {&#xa;                jTree1.setSelectionPath(p);&#xa;            }&#xa;&#xa;            if (jTree1.getEditingPath() != p&#xa;                    &amp;&amp; p.getLastPathComponent() instanceof LANHostTreeItem) {&#xa;                // System.out.println (&quot;mouse motion listener&quot;);&#xa;                jTree1.setSelectionPath(p);&#xa;                jTree1.startEditingAtPath(p);&#xa;&#xa;            }&#xa;&#xa;            if (!(p.getLastPathComponent() instanceof LANHostTreeItem)) {&#xa;                jTree1.stopEditing();&#xa;            }&#xa;&#xa;        } catch (Exception ex) {&#xa;&#xa;        }&#xa;&#xa;    }&#xa;});&#xa;&#xa;this.jTree1.addTreeWillExpandListener(new TreeWillExpandListener() {&#xa;&#xa;    public void treeWillCollapse(TreeExpansionEvent event)&#xa;            throws ExpandVetoException {&#xa;        throw new ExpandVetoException(event);&#xa;    }&#xa;&#xa;    public void treeWillExpand(TreeExpansionEvent event)&#xa;            throws ExpandVetoException {&#xa;    }&#xa;});"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
