@@ -63,6 +63,7 @@ import javax.swing.JTextArea;
 
 import de.guruz.p300.logging.JTextAreaLoggingHandler;
 import de.guruz.p300.windowui.JAutoscrollingTextArea;
+import javax.swing.JLabel;
 
 public class ConsolePanel extends JPanel {
 
@@ -75,6 +76,7 @@ public class ConsolePanel extends JPanel {
 		
 		this.setLayout(new BorderLayout());
 
+		this.add(new JLabel ("Console log:"), BorderLayout.NORTH);
 		this.add(consoleField, BorderLayout.CENTER);
 		
 		JTextAreaLoggingHandler jtalh = new JTextAreaLoggingHandler (this.consoleField);

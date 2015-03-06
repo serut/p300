@@ -1,6 +1,7 @@
 package de.guruz.p300.windowui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -33,6 +34,8 @@ public class JAutoscrollingTextArea extends JComponent {
 		m_textArea.putClientProperty("html.disable", Boolean.TRUE);
 		m_textArea.setWrapStyleWord(true);
 		m_textArea.setLineWrap(true);
+        Font font = new Font("Verdana", Font.PLAIN, 11);
+        m_textArea.setFont(font);
 
 		setLayout(new BorderLayout());
 		add(m_scrollPane, BorderLayout.CENTER);

@@ -86,6 +86,7 @@ import de.guruz.p300.utils.FileNameUtils;
 import de.guruz.p300.utils.IconChooser;
 import de.guruz.p300.utils.launchers.FileManagerLaunch;
 import de.guruz.p300.windowui.actions.AddDowloadAction;
+import java.awt.Dimension;
 
 // FIXME we only display running downloads right now? we need tabs for paused and finished downloads
 public class DownloadsPanel extends JTabbedPane implements ListSelectionListener {
@@ -182,7 +183,7 @@ public class DownloadsPanel extends JTabbedPane implements ListSelectionListener
 		//topPanel.add(productsButton);
 		
 		activeDownloads.add(topPanel, 
-				BorderLayout.NORTH);
+				BorderLayout.CENTER);
 		
 		
 		m_activeDownloadsTable = new JTable (DownloadsTableModel.instance ());
@@ -195,8 +196,11 @@ public class DownloadsPanel extends JTabbedPane implements ListSelectionListener
 		m_activeDownloadsTable.getColumnModel().getColumn(2).setMinWidth(50);
 		m_activeDownloadsTable.getColumnModel().getColumn(2).setMaxWidth(200);
 		m_activeDownloadsTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		m_activeDownloadsTable.setRowHeight(22);
-		activeDownloads.add(new JScrollPane (m_activeDownloadsTable), BorderLayout.CENTER);
+        this.m_activeDownloadsTable.setPreferredScrollableViewportSize(new Dimension(
+                300, 280));
+        this.m_activeDownloadsTable
+                .setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+		activeDownloads.add(new JScrollPane (m_activeDownloadsTable), BorderLayout.NORTH);
 		
 		
 		
@@ -207,21 +211,21 @@ public class DownloadsPanel extends JTabbedPane implements ListSelectionListener
 		openFinishedDownloadsDirButton.setToolTipText("Finished Downloads Directory");
 		openFinishedDownloadsDirButton.addActionListener(myActionListener);
 		openFinishedDownloadsDirButton.setActionCommand(OPEN_FINISHED_DOWNLOADS_DIR);
-		
+
 		JPanel upperFinishedPanel = new JPanel ();
 		upperFinishedPanel.add(openFinishedDownloadsDirButton);
-		
-		
+
+
 		JButton downloadSettingsButton = new JButton ();
 		downloadSettingsButton.setToolTipText("Settings");
 		downloadSettingsButton.setIcon(IconChooser.iconImageFromResource("22x22/applications-system.png"));
 		downloadSettingsButton.setActionCommand(DownloadsPanel.OPEN_DOWNLOAD_SETTINGS);
 		downloadSettingsButton.addActionListener(myActionListener);
 		upperFinishedPanel.add(downloadSettingsButton);
-		
-		finishedDownloads.add (upperFinishedPanel, BorderLayout.NORTH);
 
-		
+		finishedDownloads.add (upperFinishedPanel, BorderLayout.CENTER);
+
+
 		m_finishedDownloadsTable = new JTable() {
 			public Class<?> getColumnClass(int column) {
 				if (getValueAt(0, column) == null)
@@ -252,8 +256,11 @@ public class DownloadsPanel extends JTabbedPane implements ListSelectionListener
 //		m_finishedDownloadsTable.getColumnModel().getColumn(2).setMinWidth(50);
 //		m_finishedDownloadsTable.getColumnModel().getColumn(2).setMaxWidth(200);
 //		m_finishedDownloadsTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		m_finishedDownloadsTable.setRowHeight(22);
-		finishedDownloads.add(new JScrollPane (m_finishedDownloadsTable), BorderLayout.CENTER);
+        this.m_finishedDownloadsTable.setPreferredScrollableViewportSize(new Dimension(
+                300, 280));
+        this.m_finishedDownloadsTable
+                .setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+		finishedDownloads.add(new JScrollPane (m_finishedDownloadsTable), BorderLayout.NORTH);
 		
 		
 		this.addTab ("Active", null, activeDownloads);

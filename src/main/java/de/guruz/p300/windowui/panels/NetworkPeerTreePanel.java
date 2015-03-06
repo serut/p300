@@ -96,6 +96,7 @@ public class NetworkPeerTreePanel extends javax.swing.JPanel {
         searchButton = new javax.swing.JToggleButton();
         jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
 
         searchButton.setIcon(getSearchIcon());
         searchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -144,24 +145,20 @@ public class NetworkPeerTreePanel extends javax.swing.JPanel {
 
             }
 
-            public void mousePressed(MouseEvent e) {
-                
-//                if (!hasChildren(sel))
-//                    return;
-
-//                if (me.getClickCount() > 1 && me.getButton() == me.BUTTON1) {
-//                    me.consume();
-//                    if (jTree1.getSelectionPath() != null
-//                            && jTree1.getSelectionPath().getLastPathComponent() == InternetHostsTreeItem
-//                            .instance())
-//                        showSubWindow(null, "Not implemented yet",
-//                                notImplementedYetPanel);
-//                    else if (jTree1.getSelectionPath() != null
-//                            && jTree1.getSelectionPath().getLastPathComponent() == LANHostsTreeItem
-//                            .instance())
-//
-//                        new AddHostAction().actionPerformed(null);
-//                }
+            public void mousePressed(MouseEvent me) {
+                if (me.getClickCount() > 2 && me.getButton() == me.BUTTON1) {
+                    me.consume();
+                    if (jTree1.getSelectionPath() != null
+                        && jTree1.getSelectionPath().getLastPathComponent() == InternetHostsTreeItem
+                        .instance()) {
+                        showSubWindow(null, "Not implemented yet",
+                            notImplementedYetPanel);
+                    } else if (jTree1.getSelectionPath() != null
+                        && jTree1.getSelectionPath().getLastPathComponent() == LANHostsTreeItem
+                        .instance()) {
+                        new AddHostAction().actionPerformed(null);
+                    }
+                }
 
             }
 
@@ -188,21 +185,21 @@ public class NetworkPeerTreePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTextField1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchButton))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchButton)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
