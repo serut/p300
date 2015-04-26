@@ -1,5 +1,6 @@
 package de.guruz.p300;
 
+import com.apple.eawt.Application;
 import de.guruz.p300.onetoonechat.LanMessageRemoteOutbox;
 import de.guruz.p300.onetoonechat.LanMessageRouter;
 import de.guruz.p300.onetoonechat.ui.ChatWindowMap;
@@ -64,25 +65,6 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         return currentWindow;
     }
 
-    /**
-     * Hide the splash screen after one second
-     *
-     * @author guruz
-     * @see #guruzsplashManager
-     * @see #initSplashScreen()
-     */
-    public void hideSplashScreen() {
-        if (this.guruzsplashManager != null) {
-            try {
-                Thread.sleep(1000);
-                this.guruzsplashManager.hide();
-            } catch (Throwable t) {
-                // e.printStackTrace();
-                D.out("Splashscreen: " + t.toString());
-            }
-
-        }
-    }
 
     /**
      * Initialize and show the splash screen
@@ -145,6 +127,17 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         } catch (Exception ex) {
             Logger.getLogger(MainInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
+        initComponents();
+        if (OsUtils.isOSX()) {
+            System.setProperty("apple.awt.fileDialogForDirectories", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "p300");
+        }
+
+        // set JFrame to appear centered
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+
+
         this.consolePanel = new ConsolePanel();
         this.uploadsPanel = new UploadsPanel();
         this.downloadsPanel = new DownloadsPanel();
@@ -157,23 +150,8 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         lanMessageRouter.setUiMessageRouter(uiMessageRouter);
         lanMessageRouter.setLanMessageRemoteOutbox(lanMessageRemoteOutbox);
         lanMessageRemoteOutbox.setUiMessageRouter(uiMessageRouter);
-        initComponents();
 
-        // de the splash, no matter if it exists or is visible
-        Runnable r = new Runnable() {
-            public void run() {
-                //MainInterface.getInstance().hideSplashScreen();
-                MainInterface.getInstance().showP300();
-            }
-        };
-
-        new Thread(r).start();
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-                "p300");
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-        }
+        setTitle("Goat Share");
     }
 
     /**
@@ -211,9 +189,6 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         helpMenu = new javax.swing.JMenu();
         githubProjectMenuItem = new javax.swing.JMenuItem();
         suggestFeatureMenuItem = new javax.swing.JMenuItem();
-
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane1.setBorder(null);
         jSplitPane1.setDividerLocation(240);
@@ -416,6 +391,9 @@ public class MainInterface extends javax.swing.JFrame implements OSXCallbackInte
         }
 
         try {
+            Application application = Application.getApplication();
+            Image image = Toolkit.getDefaultToolkit().getImage("icon.png");
+            application.setDockIconImage(image);
             OSXInterface i = null;
             String className = "de.guruz.p300.osx.OSX";
             Class<?> c = Class.forName(className);

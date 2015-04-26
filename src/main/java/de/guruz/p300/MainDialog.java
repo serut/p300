@@ -444,14 +444,6 @@ public class MainDialog {
 	 * @author guruz
 	 */
 	public static void main(String[] args) {
-		Thread
-				.setDefaultUncaughtExceptionHandler(new P300UncaughtExceptionHandler());
-
-		if (OsUtils.isOSX()) {
-			System.setProperty("apple.awt.fileDialogForDirectories", "true");
-			System.setProperty(
-					"com.apple.mrj.application.apple.menu.about.name", "p300");
-		}
 
 		System.setProperty("java.net.preferIPv4Stack", "true");
 
@@ -469,25 +461,8 @@ public class MainDialog {
 			MainDialog.handleParameters(args);
 		}
 
-		// the user may have requested a GUI mode although we do not support it
-		if (java.awt.GraphicsEnvironment.isHeadless()) {
-			MainDialog.launchType = LaunchTypeType.Console;
-		}
-
 		// see if we have java 1.6 and a splash screen
         MainInterface.getInstance().initSplashScreen();
-        
-		try {
-			launchedByRevision = System.getProperty("launchedByP300Revision");
-		} catch (Exception e) {
-		}
-		;
-
-		if (launchedByRevision != null && launchedByRevision.length() > 0)
-			D.out("This is p300, revision " + Configuration.getSVNRevision()
-					+ " launched by " + launchedByRevision);
-		else
-			D.out("This is p300, revision " + Configuration.getSVNRevision());
 
 		Configuration.createDotP300();
 
@@ -505,8 +480,7 @@ public class MainDialog {
 
 			System.exit(1);
 		}
-		MainDialog.myURL = "http://127.0.0.1:"
-				+ MainDialog.getCurrentHTTPPort() + '/';
+		MainDialog.myURL = "http://127.0.0.1:" + MainDialog.getCurrentHTTPPort() + '/';
 
 		// well :)
 		MainDialog.createLockFile();
@@ -515,7 +489,10 @@ public class MainDialog {
 			// show the main dialog
 			try {
                 MainInterface.getInstance().createGUI();
+                Image icon = Toolkit.getDefaultToolkit().getImage("GSicon.ico");
+                MainInterface.getInstance().setIconImage(icon);
 				MainDialog.graphicConsoleEnabled = true;
+                D.out("Graphic mode. CTRL+C or close window to exit. Restart with parameter --help for help");
 			} catch (Throwable t) {
 				D
 						.out("Failure while initializing main window! Try --console as option to run headless");
@@ -524,14 +501,8 @@ public class MainDialog {
 				MainDialog.graphicConsoleEnabled = false;
 				System.exit(1);
 			}
-		}
-
-		if (MainDialog.graphicConsoleEnabled != false) {
-			D
-					.out("Graphic mode. CTRL+C or close window to exit. Restart with parameter --help for help");
 		} else {
-			D
-					.out("Headless mode. CTRL+C to exit. Restart with parameter --help for help");
+			D.out("Headless mode. CTRL+C to exit. Restart with parameter --help for help");
 		}
 
 		try {
@@ -546,7 +517,7 @@ public class MainDialog {
 
 		MainDialog.handleFirstStart();
 
-		if (!MainDialog.isHeadless() && MainDialog.instance != null) {
+		if (!MainDialog.isHeadless()) {
 			MainInterface.getInstance().setGUIEnabled(true);
 
 			if ((MainInterface.getInstance().guruztrayManager != null)

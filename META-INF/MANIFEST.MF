@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Build-Jdk: 1.8.0_25
+Built-By: Leo
+Created-By: IntelliJ IDEA
+X-p300-Main-Class: de.guruz.p300.MainDialog
+Main-Class: de.guruz.p300.Main
+SplashScreen-Image: goatshare.png
+
